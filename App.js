@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   searchBar:{
-    flex: 1,
+    flex: 0.5,
     marginTop:20,
     justifyContent:'center',
     alignSelf: 'center',
