@@ -1,30 +1,37 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useEffect, useState} from 'react'
-import { StyleSheet, Text, View, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Alert } from 'react-native';
 import WeatherScroll from './components/WeatherScroll'
 
 
-const API_KEY ='595b151a6ba8b59ac19d5356ee7e6a46';
+const WEATHER_KEY ='595b151a6ba8b59ac19d5356ee7e6a46';
+const ADDRESS_KEY = 'a7bbd84770de79b3d2f172e7c21bba4a';
+
 const img = require('./assets/image.png')
 
 const currentDate = new Date();
-const date = currentDate.toDateString()
+const date = currentDate.toDateString();
 
-
+ 
 export default function App() {
   const [data, setData] = useState({});
   const [query, setQuery] = useState('');
-  const [weather, setWeather] = useState({});
 
   const search = evt => {
-    if (evt.key === "Enter") {
-      fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
-        .then(res => res.json())
-        .then(result => {
-          setWeather(result);
-          setQuery('');
-          console.log(result);
-        });
+    fetch(`http://api.positionstack.com/v1/forward?access_key=${ADDRESS_KEY}&query=${query}`)
+      .then(res => res.json())
+      .then(result => {
+        setQuery('');
+        console.log(result);
+        var latitude = result.data[0].latitude;
+        var longitude = result.data[0].longitude;
+        fetchDataFromApi(latitude, longitude);
+      });
+  }
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      search()
     }
   }
 
@@ -39,9 +46,10 @@ export default function App() {
     })
   }, [])
 
+
   const fetchDataFromApi = (latitude, longitude) => {
     if(latitude && longitude) {
-      fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=hourly,minutely&units=metric&appid=${API_KEY}`).then(res => res.json()).then(data => {
+      fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=hourly,minutely&units=metric&appid=${WEATHER_KEY}`).then(res => res.json()).then(data => {
 
       console.log(data)
       setData(data)
@@ -57,15 +65,22 @@ export default function App() {
           <Text style={styles.heading}>Weather Application</Text>
           <Text style={styles.subheading}>{date}</Text>
         </View>
+        <View style = {styles.button}>
+          <button
+            title = "HIT ME"
+            value={query}
+            onClick={search}
+          />
+        </View>
         <View style = {styles.searchBar}>
             <input 
               type="text"
-              placeholder="Search..."
+              placeholder="Search location..."
               onChange={e => setQuery(e.target.value)}
               value={query}
-              onKeyPress={search}
+              onKeyPress={handleKeyDown}
             />
-          </View>
+        </View>
         <WeatherScroll weatherData = {data.daily} current = {data.current}/>
       </ImageBackground>
     </View>
