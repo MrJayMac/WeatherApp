@@ -12,10 +12,7 @@ const img = require('./assets/image.png')
 const currentDate = new Date();
 const date = currentDate.toDateString();
 
-var LOCATION = ' '
-
- 
-export default function App() {
+ export default function App() {
   const [data, setData] = useState({});
   const [query, setQuery] = useState('');
 
@@ -55,7 +52,6 @@ export default function App() {
 
       console.log(data)
       setData(data)
-      LOCATION = data.timezone
       })
     }
     
@@ -67,7 +63,7 @@ export default function App() {
         <View style={styles.titleContainer}>
           <Text style={styles.heading}>Weather Application</Text>
           <Text style={styles.subheading}>{date}</Text>
-          <Text style={styles.subheading}>{LOCATION}</Text>
+          <Text style={styles.subheading}>{data.timezone}</Text>
         </View>
         <View style = {styles.searchBar}>
             <input 
@@ -112,7 +108,6 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     alignSelf: 'center',
     padding: 10,
-    textAlign:'center'
   },
   titleContainer: {
     backgroundColor: "#18181b99",
