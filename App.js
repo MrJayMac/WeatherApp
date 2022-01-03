@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useEffect, useState} from 'react'
-import { StyleSheet, Text, View, ImageBackground, Alert } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, Pressable } from 'react-native';
 import WeatherScroll from './components/WeatherScroll'
 
 
@@ -11,6 +11,8 @@ const img = require('./assets/image.png')
 
 const currentDate = new Date();
 const date = currentDate.toDateString();
+
+var LOCATION = ' '
 
  
 export default function App() {
@@ -53,6 +55,7 @@ export default function App() {
 
       console.log(data)
       setData(data)
+      LOCATION = data.timezone
       })
     }
     
@@ -64,23 +67,23 @@ export default function App() {
         <View style={styles.titleContainer}>
           <Text style={styles.heading}>Weather Application</Text>
           <Text style={styles.subheading}>{date}</Text>
-        </View>
-        <View style = {styles.button}>
-          <button
-            title = "HIT ME"
-            value={query}
-            onClick={search}
-          />
+          <Text style={styles.subheading}>{LOCATION}</Text>
         </View>
         <View style = {styles.searchBar}>
             <input 
               type="text"
-              placeholder="Search location..."
+              placeholder="Enter location..."
               onChange={e => setQuery(e.target.value)}
               value={query}
               onKeyPress={handleKeyDown}
             />
+            <View style = {styles.button}>
+              <Pressable onPress={search}>
+                <Text style = {styles.searchText}>Search</Text>
+              </Pressable>
+            </View>
         </View>
+        
         <WeatherScroll weatherData = {data.daily} current = {data.current}/>
       </ImageBackground>
     </View>
@@ -108,8 +111,8 @@ const styles = StyleSheet.create({
     marginTop:20,
     justifyContent:'center',
     alignSelf: 'center',
-    borderRadius: 50,
     padding: 10,
+    textAlign:'center'
   },
   titleContainer: {
     backgroundColor: "#18181b99",
@@ -122,11 +125,25 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: 25,
+    fontSize: 30,
     color:'white',
     fontWeight: '700'
   },
   subheading: {
+    textAlign:'center',
+    fontSize: 20,
+    color:'white',
+    fontWeight: '700'
+  },
+  button: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    backgroundColor: '#18181bcc',
+    borderRadius: 10
+  },
+  searchText: {
     textAlign:'center',
     fontSize: 15,
     color:'white',
