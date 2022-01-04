@@ -24,7 +24,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.mrjmack.weatherapp",
+      "package": "in.mrjmack.weather-app",
       "versionCode": 1,
       "permissions": ["LOCATION"]
     },
