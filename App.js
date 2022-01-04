@@ -1,7 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useEffect, useState} from 'react'
 import { StyleSheet, Text, View, ImageBackground, Pressable } from 'react-native';
-import WeatherScroll from './components/WeatherScroll'
+import DayOf from './components/DayOf'
+import * as Location from 'expo-location' 
 
 
 const WEATHER_KEY ='595b151a6ba8b59ac19d5356ee7e6a46';
@@ -35,22 +36,22 @@ const date = currentDate.toDateString();
   }
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((success) => {
-      let {latitude, longitude} = success.coords;
-      fetchDataFromApi(latitude, longitude)
-    }, (err) => {
-      if(err){
-        fetchDataFromApi("49.2827","-123.1207")
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        fetchDataFromApi("43.6532", "-79.3832")
+        return;
       }
-    })
+
+      let location = await Location.getCurrentPositionAsync({});
+      fetchDataFromApi(location.coords.latitude, location.coords.longitude);
+    })();
   }, [])
 
 
   const fetchDataFromApi = (latitude, longitude) => {
     if(latitude && longitude) {
       fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=hourly,minutely&units=metric&appid=${WEATHER_KEY}`).then(res => res.json()).then(data => {
-
-      console.log(data)
       setData(data)
       })
     }
@@ -80,7 +81,7 @@ const date = currentDate.toDateString();
             </View>
         </View>
         
-        <WeatherScroll weatherData = {data.daily} current = {data.current}/>
+        <DayOf weatherData = {data.daily} current = {data.current}/>
       </ImageBackground>
     </View>
   );

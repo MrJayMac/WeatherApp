@@ -1,19 +1,19 @@
 import React from 'react'
 import {View, ScrollView, Image, Text, StyleSheet} from 'react-native'
 import moment from 'moment-timezone'
-import FutureForecast from './FutureForecast'
+import FutureForecast from './NextDays'
 
-const WeatherScroll = ({weatherData, current}) => {
+const DayOf = ({weatherData, current}) => {
     return (
         <ScrollView horizontal={true} style={styles.scrollView}>
-            <CurrentTempEl data={weatherData && weatherData.length > 0 ? weatherData[0] : {}} current = {current}/>
+            <CurrentTemp data={weatherData && weatherData.length > 0 ? weatherData[0] : {}} current = {current}/>
             <FutureForecast data={weatherData} current = {current}/>
         </ScrollView>
     )
 }
 
 
-const CurrentTempEl = ({data, current}) => {
+const CurrentTemp = ({data, current}) => {
 
     if(data && data.weather){
         const img = {uri: 'http://openweathermap.org/img/wn/'+ data.weather[0].icon +'@4x.png'}
@@ -86,4 +86,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default WeatherScroll
+export default DayOf

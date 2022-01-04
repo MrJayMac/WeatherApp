@@ -1,7 +1,7 @@
 import React from 'react'
 import {View, Text, Image, StyleSheet} from 'react-native'
 import moment from 'moment-timezone'
-const FutureForecast = ({data}) => {
+const NextDays = ({data}) => {
     return (
         <View style={{flexDirection: 'row'}}>
             {
@@ -42,7 +42,7 @@ const FutureForecastItem = ({forecastItem}) => {
     )
 }
 
-export default FutureForecast
+export default NextDays
 
 
 const styles = StyleSheet.create({
