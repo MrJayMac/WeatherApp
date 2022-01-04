@@ -144,5 +144,5 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color:'white',
     fontWeight: '700'
-  },
+  }
 });
