@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react'
 import { StyleSheet, Text, View, ImageBackground, Pressable } from 'react-native';
 import DayOf from './components/DayOf'
 import * as Location from 'expo-location' 
+import 
 
 
 const WEATHER_KEY ='595b151a6ba8b59ac19d5356ee7e6a46';
@@ -66,9 +67,10 @@ const date = currentDate.toDateString();
           <Text style={styles.subheading}>{date}</Text>
           <Text style={styles.subheading}>{data.timezone}</Text>
         </View>
-        <View style = {styles.searchBar}>
+        <div className='search-box'>
             <input 
               type="text"
+              className='search-bar'
               placeholder="Enter location..."
               onChange={e => setQuery(e.target.value)}
               value={query}
@@ -79,7 +81,7 @@ const date = currentDate.toDateString();
                 <Text style = {styles.searchText}>Search</Text>
               </Pressable>
             </View>
-        </View>
+        </div>
         
         <DayOf weatherData = {data.daily} current = {data.current}/>
       </ImageBackground>
