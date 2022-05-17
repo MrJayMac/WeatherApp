@@ -1,58 +1,49 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useEffect, useState} from 'react'
-import { StyleSheet, Text, View, ImageBackground, Pressable } from 'react-native';
-import DayOf from './components/DayOf'
-import * as Location from 'expo-location' 
-import 
+import { StyleSheet, Text, View, ImageBackground } from 'react-native';
+import WeatherScroll from './components/WeatherScroll'
 
 
-const WEATHER_KEY ='595b151a6ba8b59ac19d5356ee7e6a46';
-const ADDRESS_KEY = 'a7bbd84770de79b3d2f172e7c21bba4a';
-
+const API_KEY ='595b151a6ba8b59ac19d5356ee7e6a46';
 const img = require('./assets/image.png')
 
 const currentDate = new Date();
-const date = currentDate.toDateString();
+const date = currentDate.toDateString()
 
- export default function App() {
+
+export default function App() {
   const [data, setData] = useState({});
   const [query, setQuery] = useState('');
+  const [weather, setWeather] = useState({});
 
   const search = evt => {
-    fetch(`http://api.positionstack.com/v1/forward?access_key=${ADDRESS_KEY}&query=${query}`)
-      .then(res => res.json())
-      .then(result => {
-        setQuery('');
-        console.log(result);
-        var latitude = result.data[0].latitude;
-        var longitude = result.data[0].longitude;
-        fetchDataFromApi(latitude, longitude);
-      });
-  }
-
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      search()
+    if (evt.key === "Enter") {
+      fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
+        .then(res => res.json())
+        .then(result => {
+          setWeather(result);
+          setQuery('');
+          console.log(result);
+        });
     }
   }
 
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        fetchDataFromApi("43.6532", "-79.3832")
-        return;
+    navigator.geolocation.getCurrentPosition((success) => {
+      let {latitude, longitude} = success.coords;
+      fetchDataFromApi(latitude, longitude)
+    }, (err) => {
+      if(err){
+        fetchDataFromApi("49.2827","-123.1207")
       }
-
-      let location = await Location.getCurrentPositionAsync({});
-      fetchDataFromApi(location.coords.latitude, location.coords.longitude);
-    })();
+    })
   }, [])
-
 
   const fetchDataFromApi = (latitude, longitude) => {
     if(latitude && longitude) {
-      fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=hourly,minutely&units=metric&appid=${WEATHER_KEY}`).then(res => res.json()).then(data => {
+      fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=hourly,minutely&units=metric&appid=${API_KEY}`).then(res => res.json()).then(data => {
+
+      console.log(data)
       setData(data)
       })
     }
@@ -65,25 +56,17 @@ const date = currentDate.toDateString();
         <View style={styles.titleContainer}>
           <Text style={styles.heading}>Weather Application</Text>
           <Text style={styles.subheading}>{date}</Text>
-          <Text style={styles.subheading}>{data.timezone}</Text>
         </View>
-        <div className='search-box'>
+        <View style = {styles.searchBar}>
             <input 
               type="text"
-              className='search-bar'
-              placeholder="Enter location..."
+              placeholder="Search..."
               onChange={e => setQuery(e.target.value)}
               value={query}
-              onKeyPress={handleKeyDown}
+              onKeyPress={search}
             />
-            <View style = {styles.button}>
-              <Pressable onPress={search}>
-                <Text style = {styles.searchText}>Search</Text>
-              </Pressable>
-            </View>
-        </div>
-        
-        <DayOf weatherData = {data.daily} current = {data.current}/>
+          </View>
+        <WeatherScroll weatherData = {data.daily} current = {data.current}/>
       </ImageBackground>
     </View>
   );
@@ -106,10 +89,11 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   searchBar:{
-    flex: 0.5,
+    flex: 1,
     marginTop:20,
     justifyContent:'center',
     alignSelf: 'center',
+    borderRadius: 50,
     padding: 10,
   },
   titleContainer: {
@@ -123,28 +107,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: 30,
+    fontSize: 25,
     color:'white',
     fontWeight: '700'
   },
   subheading: {
     textAlign:'center',
-    fontSize: 20,
-    color:'white',
-    fontWeight: '700'
-  },
-  button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    backgroundColor: '#18181bcc',
-    borderRadius: 10
-  },
-  searchText: {
-    textAlign:'center',
     fontSize: 15,
     color:'white',
     fontWeight: '700'
-  }
+  },
 });
