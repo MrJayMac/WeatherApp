@@ -33,7 +33,6 @@ const FutureForecastItem = ({forecastItem}) => {
             <Text  style={styles.temp}>Min: {Math.round(forecastItem.temp.min)}°C</Text>
             <Text  style={styles.temp}>Max: {Math.round(forecastItem.temp.max)}°C</Text>
             <Text  style={styles.temp}>Wind Speed: {Math.round(forecastItem.wind_speed)} m/s</Text>
-            <Text  style={styles.temp}>Precipitation: {forecastItem.pop} %</Text>
             <Text  style={styles.temp}>Humidity: {forecastItem.humidity} %</Text>
             <Text  style={styles.temp}>Description: {forecastItem.weather[0].description}</Text>
 

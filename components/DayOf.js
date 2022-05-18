@@ -26,7 +26,6 @@ const CurrentTemp = ({data, current}) => {
                     <Text  style={styles.temp}>Min: {Math.round(data.temp.min)}°C</Text>
                     <Text  style={styles.temp}>Max: {Math.round(data.temp.max)}°C</Text>
                     <Text  style={styles.temp}>Wind Speed: {Math.round(data.wind_speed)} m/s</Text>
-                    <Text  style={styles.temp}>Precipitation: {data.pop} %</Text>
                     <Text  style={styles.temp}>Humidity: {(data.humidity)} %</Text>
                     <Text  style={styles.temp}>Description: {(data.weather[0].description)}</Text>
                     
